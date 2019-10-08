@@ -3,6 +3,24 @@ package org.bukkit.plugin.java.annotation
 import com.google.auto.service.AutoService
 import com.google.common.collect.Lists
 import com.google.common.collect.Maps
+import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+import javax.annotation.processing.AbstractProcessor
+import javax.annotation.processing.Processor
+import javax.annotation.processing.RoundEnvironment
+import javax.annotation.processing.SupportedAnnotationTypes
+import javax.annotation.processing.SupportedSourceVersion
+import javax.lang.model.SourceVersion
+import javax.lang.model.element.Element
+import javax.lang.model.element.Modifier
+import javax.lang.model.element.PackageElement
+import javax.lang.model.element.TypeElement
+import javax.lang.model.type.TypeMirror
+import javax.lang.model.util.ElementFilter
+import javax.tools.Diagnostic
+import javax.tools.StandardLocation
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import org.bukkit.command.CommandExecutor
@@ -25,24 +43,6 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.nodes.Tag
-import java.io.IOException
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
-import javax.annotation.processing.AbstractProcessor
-import javax.annotation.processing.Processor
-import javax.annotation.processing.RoundEnvironment
-import javax.annotation.processing.SupportedAnnotationTypes
-import javax.annotation.processing.SupportedSourceVersion
-import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
-import javax.lang.model.element.Modifier
-import javax.lang.model.element.PackageElement
-import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.ElementFilter
-import javax.tools.Diagnostic
-import javax.tools.StandardLocation
 
 @AutoService(Processor::class)
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
