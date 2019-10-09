@@ -37,3 +37,5 @@ include(
     "plugin-yml-annotations",
     "plugin-yml-processor"
 )
+
+enableFeaturePreview("GRADLE_METADATA")
