@@ -4,12 +4,12 @@ plugins {
 }
 
 dependencies {
-    compileOnly(Libs.spigot_api)
-    compileOnly(Libs.incap)
-    implementation(Libs.kotlin_stdlib_jdk8)
+    compileOnly("org.spigotmc:spigot-api:_")
+    compileOnly("net.ltgt.gradle.incap:incap:_")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:_")
     implementation(project(":plugin-yml-annotations"))
-    implementation(Libs.auto_service_annotations)
+    implementation("com.google.auto.service:auto-service-annotations:_")
 
-    kapt(Libs.auto_service)
-    kapt(Libs.incap_processor)
+    kapt("com.google.auto.service:auto-service:_")
+    kapt("net.ltgt.gradle.incap:incap-processor:_")
 }

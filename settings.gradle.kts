@@ -1,4 +1,11 @@
-rootProject.name = "spigot-plugin-annotations"
+import de.fayard.refreshVersions.bootstrapRefreshVersions
+
+buildscript {
+    repositories { gradlePluginPortal() }
+    dependencies.classpath("de.fayard.refreshVersions:refreshVersions:0.9.7")
+}
+
+bootstrapRefreshVersions()
 
 gradle.allprojects {
     group = "io.pixeloutlaw.minecraft.spigot"
@@ -15,9 +22,9 @@ gradle.allprojects {
     }
 }
 
+rootProject.name = "spigot-plugin-annotations"
+
 include(
     "plugin-yml-annotations",
     "plugin-yml-processor"
 )
-
-enableFeaturePreview("GRADLE_METADATA")

@@ -1,121 +1,12 @@
-
-import com.diffplug.gradle.spotless.SpotlessExtension
-import com.diffplug.gradle.spotless.SpotlessPlugin
-import io.gitlab.arturbosch.detekt.DetektPlugin
-import io.gitlab.arturbosch.detekt.extensions.DetektExtension
-import nebula.plugin.bintray.BintrayPlugin
-import nebula.plugin.responsible.NebulaResponsiblePlugin
-import org.jetbrains.dokka.gradle.DokkaPlugin
-import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    base
-    buildSrcVersions
-    kotlin("jvm") version Versions.org_jetbrains_kotlin_jvm_gradle_plugin apply false
-    id("com.diffplug.gradle.spotless") version Versions.com_diffplug_gradle_spotless_gradle_plugin apply false
-    id("io.gitlab.arturbosch.detekt") version Versions.io_gitlab_arturbosch_detekt_gradle_plugin apply false
-    id("org.jetbrains.dokka") version Versions.org_jetbrains_dokka_gradle_plugin
-    id("nebula.maven-publish") version Versions.nebula_maven_publish_gradle_plugin apply false
-    id("nebula.nebula-bintray") version Versions.nebula_nebula_bintray_gradle_plugin
-    id("nebula.project") version Versions.nebula_project_gradle_plugin apply false
-    id("nebula.release") version Versions.nebula_release_gradle_plugin
+    id("io.pixeloutlaw.multi") version "0.6.0"
+    kotlin("jvm") version "1.4.21" apply false
+    id("nebula.nebula-bintray") version "8.5.0"
+    id("nebula.release") version "15.0.3"
 }
 
 subprojects {
     this@subprojects.version = rootProject.version
-    pluginManager.withPlugin("java") {
-        this@subprojects.pluginManager.apply(NebulaResponsiblePlugin::class.java)
-        this@subprojects.pluginManager.apply(BintrayPlugin::class.java)
-        this@subprojects.pluginManager.apply(SpotlessPlugin::class.java)
-
-        this@subprojects.configure<SpotlessExtension> {
-            java {
-                target("src/**/*.java")
-                googleJavaFormat()
-                trimTrailingWhitespace()
-                endWithNewline()
-            }
-            format("mythicDropsJava") {
-                target("src/*/java/com/tealcube/**/*.java")
-                if (this@subprojects.file("HEADER").exists()) {
-                    licenseHeaderFile("HEADER", "package ")
-                }
-            }
-        }
-
-        this@subprojects.tasks.withType<JavaCompile> {
-            dependsOn("spotlessJavaApply", "spotlessMythicDropsJavaApply")
-            options.compilerArgs.add("-parameters")
-            options.isFork = true
-            options.forkOptions.executable = "javac"
-        }
-        this@subprojects.tasks.withType<Test> {
-            useJUnitPlatform()
-        }
-
-        this@subprojects.dependencies {
-            "testImplementation"(Libs.spigot_api)
-            "testImplementation"(Libs.mockito_core)
-            "testImplementation"(Libs.truth)
-            "testImplementation"(platform(Libs.junit_bom))
-            "testImplementation"("org.junit.jupiter:junit-jupiter")
-            "testImplementation"(Libs.junit)
-            "testRuntimeOnly"("org.junit.vintage:junit-vintage-engine") {
-                because("allows JUnit 3 and JUnit 4 tests to run")
-            }
-            "testRuntimeOnly"("org.junit.platform:junit-platform-launcher") {
-                because("allows tests to run from IDEs that bundle older version of launcher")
-            }
-        }
-    }
-    pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
-        this@subprojects.pluginManager.apply(DetektPlugin::class.java)
-        this@subprojects.pluginManager.apply(DokkaPlugin::class.java)
-        this@subprojects.pluginManager.apply(SpotlessPlugin::class.java)
-        this@subprojects.configure<DetektExtension> {
-            baseline = this@subprojects.file("baseline.xml")
-        }
-        this@subprojects.configure<SpotlessExtension> {
-            kotlin {
-                target("src/**/*.kt")
-                ktlint()
-                trimTrailingWhitespace()
-                endWithNewline()
-                if (this@subprojects.file("HEADER").exists()) {
-                    licenseHeaderFile("HEADER")
-                }
-            }
-        }
-        this@subprojects.tasks.withType<KotlinCompile> {
-            dependsOn("spotlessKotlinApply")
-            kotlinOptions {
-                javaParameters = true
-                jvmTarget = "1.8"
-            }
-        }
-        this@subprojects.tasks.getByName<DokkaTask>("dokka") {
-            outputFormat = "html"
-            configuration {
-                jdkVersion = 8
-            }
-        }
-        val dokkaJavadoc = this@subprojects.tasks.create("dokkaJavadoc", DokkaTask::class.java) {
-            outputDirectory = "${project.buildDir}/javadoc"
-            outputFormat = "javadoc"
-            configuration {
-                jdkVersion = 8
-            }
-        }
-        this@subprojects.tasks.getByName<Jar>("javadocJar") {
-            dependsOn(dokkaJavadoc)
-        }
-
-        this@subprojects.dependencies {
-            "testImplementation"(Libs.kotlin_reflect)
-            "testImplementation"(Libs.mockk)
-        }
-    }
 }
 
 bintray {
@@ -126,7 +17,7 @@ bintray {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = Versions.gradleLatestVersion
+    gradleVersion = "6.7.1"
     distributionType = Wrapper.DistributionType.ALL
 }
 
