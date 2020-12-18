@@ -20,5 +20,3 @@ tasks.withType<Wrapper> {
     gradleVersion = "6.7.1"
     distributionType = Wrapper.DistributionType.ALL
 }
-
-tasks.findByName("release")?.finalizedBy("build")
